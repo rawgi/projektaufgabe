@@ -4,6 +4,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import name.panitz.game.FallingImage;
@@ -36,6 +37,9 @@ public class Player extends FallingImage implements name.panitz.game.Player{
 				break;
 			case KeyEvent.VK_E:
 				heal();
+				break;
+			case KeyEvent.VK_ESCAPE:
+				((GameFrame)getParent().getParent()).setContent(new Menu(true));
 				break;
 			}
 		}

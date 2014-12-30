@@ -31,10 +31,15 @@ public class FileUtil {
 			throw new RuntimeException(e);
 		}
 	}
-
-	public static void main(String[] args) {
-		for (String l : readTextLines("test.txt")) {
-			System.out.println(l);
-		}
-	}
+	
+//	public static void writeFile(String fileName, String[] content){
+//		try {
+//			FileWriter fw = new FileWriter(fileName);
+//			for(String curLine: content){
+//				fw.write(curLine);
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }

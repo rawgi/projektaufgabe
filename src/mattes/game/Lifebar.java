@@ -58,11 +58,9 @@ public class Lifebar implements Paintable{
 
 	@Override
 	public void paintTo(Graphics g) {
-		if(!isHitable)g.setColor(Color.red);
 		for(Life life: lifeList){
 			life.paintTo(g);
 		}
-		if(!isHitable)g.setColor(null);
 	}
 
 	public boolean isHitable() {

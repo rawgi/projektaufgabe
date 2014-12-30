@@ -54,9 +54,9 @@ public class Game implements GameFramework{
 			width = col*gameSizeScale;
 			curLine++;
 		}
-		height = curLine*gameSizeScale;
+		height = curLine*gameSizeScale+gameSizeScale;
 		
-		lifeBar = new Lifebar(new Vertex(0,0),5,gameSizeScale);
+		lifeBar = new Lifebar(new Vertex(0,curLine*gameSizeScale),5,gameSizeScale);
 	}
 	
 	@Override

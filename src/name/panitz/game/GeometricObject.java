@@ -1,6 +1,8 @@
 package name.panitz.game;
 
-public abstract class GeometricObject implements MoveAndPaintable {
+import javax.swing.JComponent;
+
+public abstract class GeometricObject extends JComponent implements MoveAndPaintable {
 	public Vertex corner;
 	double width;
 	double height;

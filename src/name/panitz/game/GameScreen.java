@@ -12,7 +12,7 @@ public class GameScreen extends JPanel {
 
 	GameFramework game;
 
-	Timer timer = new Timer(1000 / 50, (ev) -> {
+	Timer timer = new Timer(1000 / 100, (ev) -> {
 		game.step();
 		game.checks();
 		checkForEndOfGame();
@@ -29,7 +29,7 @@ public class GameScreen extends JPanel {
 		this.game = game;
 		initAndStart();
 	}
-
+	
 	private void initAndStart() {
 		addKeyListener(game.getPlayer().getKeyListener());
 		timer.start();
