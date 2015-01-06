@@ -2,16 +2,20 @@ package name.panitz.game;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.io.IOException;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
+import mattes.game.GameFrame;
+import mattes.game.Menu;
 
 @SuppressWarnings("serial")
 public class GameScreen extends JPanel {
 
 	GameFramework game;
-
+	GameFrame gFrame;
+	
 	Timer timer = new Timer(1000 / 100, (ev) -> {
 		game.step();
 		game.checks();
@@ -38,9 +42,9 @@ public class GameScreen extends JPanel {
 	private void checkForEndOfGame() {
 		if (game.finished()) {
 			timer.stop();
-			repaint();
+			gFrame = (GameFrame) SwingUtilities.getWindowAncestor(this);
+			gFrame.setContent(new Menu(false));
 		}
-
 	}
 	
 	private void checkForNewSpawn(){

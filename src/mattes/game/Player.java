@@ -4,7 +4,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import name.panitz.game.FallingImage;
@@ -12,6 +11,8 @@ import name.panitz.game.Vertex;
 
 public class Player extends FallingImage implements name.panitz.game.Player{
 
+	private boolean isHealing = false;
+	
 	private KeyListener keyListener = new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -37,9 +38,6 @@ public class Player extends FallingImage implements name.panitz.game.Player{
 				break;
 			case KeyEvent.VK_E:
 				heal();
-				break;
-			case KeyEvent.VK_ESCAPE:
-				((GameFrame)getParent().getParent()).setContent(new Menu(true));
 				break;
 			}
 		}
@@ -78,8 +76,9 @@ public class Player extends FallingImage implements name.panitz.game.Player{
 	}
 	
 	private void heal(){
-		if(!isJumping){
-			
+		if(!isJumping && !isHealing){
+			stop();
+			isHealing = true;
 		}
 	}
 	

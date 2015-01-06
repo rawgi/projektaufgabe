@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import name.panitz.game.GameFramework;
+import name.panitz.game.GameScreen;
 import name.panitz.game.Vertex;
 import name.panitz.game.util.FileUtil;
 
@@ -61,9 +62,6 @@ public class Game implements GameFramework{
 	
 	@Override
 	public void paintTo(Graphics g) {
-		if(finished()){
-			g.drawString(won() ? "gewonnen" : "verloren", 100, 100);
-		}
 		
 		player.paintTo(g);
 		

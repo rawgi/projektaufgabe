@@ -52,6 +52,10 @@ public class Lifebar implements Paintable{
 		}
 	}
 	
+	public void healOne(){
+		lifeList.add(new Life(new Vertex((lifeList.size()+1)*gameSizeScale,corner.y)));
+	}
+	
 	public boolean isEmpty(){
 		return lifeList.size() == 0 ? true : false;
 	}

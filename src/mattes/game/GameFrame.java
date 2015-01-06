@@ -11,7 +11,7 @@ public class GameFrame extends JFrame{
 	
 	public static void main(String[]args){
 		GameFrame gFrame = new GameFrame();
-		gFrame.add(new GameScreen(new Game("testMap1")));
+		gFrame.add(new Menu(false));
 		gFrame.pack();
 		gFrame.setVisible(true);
 		gFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -20,5 +20,6 @@ public class GameFrame extends JFrame{
 	public void setContent(JPanel content){
 		this.content = content;
 		setContentPane(content);
+		pack();
 	}
 }
