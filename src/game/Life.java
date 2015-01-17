@@ -1,7 +1,7 @@
-package mattes.game;
+package game;
 
-import name.panitz.game.ImageObject;
-import name.panitz.game.Vertex;
+import framework.ImageObject;
+import framework.Vertex;
 
 public class Life extends ImageObject{
 

@@ -1,4 +1,4 @@
-package name.panitz.game;
+package framework;
 
 public class Vertex {
 	public double x;

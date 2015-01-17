@@ -1,46 +1,53 @@
-package mattes.game;
+package game;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import name.panitz.game.Vertex;
-import name.panitz.game.Paintable;
+import framework.Paintable;
+import framework.Vertex;
 
 public class Lifebar implements Paintable{
 
-	List<Life> lifeList = new ArrayList();
+	List<Life> lifeList = new ArrayList<Life>();
 	int lifes;
 	Vertex corner;
-	int gameSizeScale;
+	int maxLifes;
 	
 	boolean isHitable = true;
+	boolean isHealable = true;
 	
 	Timer hitableDelay = new Timer(500, e -> {
 		isHitable = true;
-		stopTimer();
+		stopHitTimer();
 	});
 	
-	private void stopTimer(){
+	Timer healDelay = new Timer(500, e -> {
+		isHealable = true;
+		stopHealTimer();
+	});
+	
+	private void stopHitTimer(){
 		hitableDelay.stop();
 	}
 
-	public Lifebar(Vertex corner, int lifes, int gameSizeScale) {
+	private void stopHealTimer(){
+		healDelay.stop();
+	}
+	
+	public Lifebar(Vertex corner, int lifes) {
 		this.corner = corner;
 		this.lifes = lifes;
-		this.gameSizeScale = gameSizeScale;
+		maxLifes = lifes;
 		create();
 	}
 
 	public void create(){
 		for(int i = 0; i<lifes; i++){
-			lifeList.add(new Life(new Vertex(i*gameSizeScale,corner.y)));
+			lifeList.add(new Life(new Vertex(i*Game.gameSizeScale,corner.y)));
 		}
 	}
 	
@@ -53,7 +60,11 @@ public class Lifebar implements Paintable{
 	}
 	
 	public void healOne(){
-		lifeList.add(new Life(new Vertex((lifeList.size()+1)*gameSizeScale,corner.y)));
+		if(lifeList.size() < maxLifes && isHealable){
+			lifeList.add(new Life(new Vertex((lifeList.size()+1)*Game.gameSizeScale,corner.y)));
+			isHealable = false;
+			healDelay.start();
+		}
 	}
 	
 	public boolean isEmpty(){

@@ -1,8 +1,13 @@
-package name.panitz.game;
+package framework;
+
+import game.Game;
+import game.Projectile;
 
 import java.awt.Image;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -22,6 +27,8 @@ public class FallingImage extends ImageObject {
 	Image img_fallRight;
 	Image img_shootLeft;
 	Image img_shootRight;
+	
+	List<Projectile> projectiles = new ArrayList<Projectile>();
 	
 	String soundFolder = "sounds/";
 	
@@ -72,6 +79,18 @@ public class FallingImage extends ImageObject {
 		}
 	}
 
+	public void shoot(){
+		int x;
+		if(img.equals(img_right) || img.equals(img_jumpRight) || img.equals(img_fallRight) || img.equals(img_shootRight)){
+			x=6;
+			img = img_shootRight;
+		}else{
+			x=-6;
+			img = img_shootLeft;
+		}
+		projectiles.add(new Projectile(new Vertex(corner.x+Game.gameSizeScale+1,corner.y+Game.gameSizeScale/2), new Vertex(x,0)));
+	}
+	
 	public void startJump(double v0) {
 		isJumping = true;
 		this.v0 = v0;
@@ -156,7 +175,7 @@ public class FallingImage extends ImageObject {
 			right();
 		}
 	}
-	
+
 	public void playSound(String soundFile) {
 		try {
 			InputStream soundStream = getClass().getClassLoader()
@@ -177,6 +196,10 @@ public class FallingImage extends ImageObject {
 		return speed;
 	}
 
+	public List<Projectile> getProjectiles(){
+		return projectiles;
+	}
+	
 	public void setSpeed(int speed) {
 		this.speed = speed;
 	}

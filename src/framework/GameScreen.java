@@ -1,4 +1,8 @@
-package name.panitz.game;
+package framework;
+
+import game.GameFrame;
+import game.Menu;
+import game.Settings;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -6,9 +10,6 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-
-import mattes.game.GameFrame;
-import mattes.game.Menu;
 
 @SuppressWarnings("serial")
 public class GameScreen extends JPanel {
@@ -43,12 +44,23 @@ public class GameScreen extends JPanel {
 		if (game.finished()) {
 			timer.stop();
 			gFrame = (GameFrame) SwingUtilities.getWindowAncestor(this);
-			gFrame.setContent(new Menu(false));
+			gFrame.setContent(new Menu());
 		}
 	}
 	
 	private void checkForNewSpawn(){
-		if(spawnCount == 1000){
+		int delay = 0;
+		switch(Settings.difficulty){
+		case "easy":
+			delay = 1300;
+			break;
+		case "hard":
+			delay = 700;
+			break;
+		default: delay = 1000;
+		}
+		
+		if(spawnCount == delay){
 			game.spawnEnemy();
 			spawnCount = 0;
 		} else {

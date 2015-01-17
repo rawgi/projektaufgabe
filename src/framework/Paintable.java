@@ -1,4 +1,4 @@
-package name.panitz.game;
+package framework;
 
 import java.awt.Graphics;
 

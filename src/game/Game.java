@@ -1,14 +1,13 @@
-package mattes.game;
+package game;
 
 import java.awt.Graphics;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import name.panitz.game.GameFramework;
-import name.panitz.game.GameScreen;
-import name.panitz.game.Vertex;
-import name.panitz.game.util.FileUtil;
+import framework.GameFramework;
+import framework.Vertex;
+import util.FileUtil;
 
 public class Game implements GameFramework{
 
@@ -21,10 +20,10 @@ public class Game implements GameFramework{
 	private int width;
 	private int height;
 	
-	private int gameSizeScale = 40;
+	public static int gameSizeScale = 40;
 	
-	public Game(String level){
-		buildLevel(level);
+	public Game(){
+		buildLevel(Settings.level);
 	}
 	
 	void buildLevel(String level) {
@@ -57,20 +56,23 @@ public class Game implements GameFramework{
 		}
 		height = curLine*gameSizeScale+gameSizeScale;
 		
-		lifeBar = new Lifebar(new Vertex(0,curLine*gameSizeScale),5,gameSizeScale);
+		lifeBar = new Lifebar(new Vertex(0,curLine*gameSizeScale),5);
 	}
 	
 	@Override
 	public void paintTo(Graphics g) {
-		
 		player.paintTo(g);
-		
+		for(Projectile p: player.getProjectiles()){
+			p.paintTo(g);
+		}
 		for(Wall wall: walls){
 			wall.paintTo(g);
 		}
-		
 		for(Enemy enemy: enemies){
 			enemy.paintTo(g);
+			for(Projectile p: enemy.getProjectiles()){
+				p.paintTo(g);
+			}
 		}
 		lifeBar.paintTo(g);
 	}
@@ -78,9 +80,14 @@ public class Game implements GameFramework{
 	@Override
 	public void step() {
 		player.move();
-		
+		for(Projectile p: player.getProjectiles()){
+			p.move();
+		}
 		for(Enemy enemy: enemies){
 			enemy.move();
+			for(Projectile p: enemy.getProjectiles()){
+				p.move();
+			}
 		}
 	}
 
@@ -89,6 +96,54 @@ public class Game implements GameFramework{
 		checkWallCollisions();
 		checkPlayerEnemyCollisions();
 		checkForGround();
+		checkProjectiles();
+		if(player.isHealing()){
+			lifeBar.healOne();
+		}
+	}
+
+	private void checkProjectiles() {
+		List<Projectile> projectilesToRemove = new ArrayList<Projectile>();
+		List<Enemy> enemiesHit = new ArrayList<Enemy>();
+		
+		//Projektile des Spielers durchlaufen
+		for(Projectile p: player.getProjectiles()){
+			for(Wall wall: walls){
+				if(p.touches(wall)){
+					projectilesToRemove.add(p);
+				}
+			}
+			for(Enemy enemy: enemies){
+				if(p.touches(enemy)){
+					projectilesToRemove.add(p);
+					enemiesHit.add(enemy);
+				}
+			}
+		}
+		for(Projectile p: projectilesToRemove){
+			player.getProjectiles().remove(p);
+		}
+		projectilesToRemove.clear();
+		//Projektile aller Gegner durchlaufen
+		for(Enemy enemy: enemies){
+			for(Projectile p: enemy.getProjectiles()){
+				for(Wall wall: walls){
+					if(p.touches(wall)){
+						projectilesToRemove.add(p);
+					}
+				}
+				if(p.touches(player)){
+					projectilesToRemove.add(p);
+					lifeBar.removeLast();
+				}
+			}
+			for(Projectile p: projectilesToRemove){
+				enemy.getProjectiles().remove(p);
+			}
+		}
+		for(Enemy enemy: enemiesHit){
+			enemies.remove(enemy);
+		}
 	}
 
 	//prüft, ob eine Figur von einer Plattform fällt.
@@ -150,7 +205,8 @@ public class Game implements GameFramework{
 
 	private void checkWallCollisions() {
 		for(Wall wall: walls){
-			if(player.touches(wall)){
+			if(player.touches(wall) && !player.isStandingOnTopOf(wall)){
+				System.out.println("stop, weil wand");
 					player.stopMoveButFall();
 			}
 			

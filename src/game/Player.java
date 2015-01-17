@@ -1,4 +1,4 @@
-package mattes.game;
+package game;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -6,10 +6,10 @@ import java.awt.event.KeyListener;
 
 import javax.swing.Timer;
 
-import name.panitz.game.FallingImage;
-import name.panitz.game.Vertex;
+import framework.FallingImage;
+import framework.Vertex;
 
-public class Player extends FallingImage implements name.panitz.game.Player{
+public class Player extends FallingImage implements framework.Player{
 
 	private boolean isHealing = false;
 	
@@ -18,17 +18,46 @@ public class Player extends FallingImage implements name.panitz.game.Player{
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_A:
+				stopHeal();
 				left();
 				break;
 			case KeyEvent.VK_D:
+				stopHeal();
 				right();
 				break;
 			case KeyEvent.VK_W:
+				stopHeal();
 				jump();
 				playSound("jump.wav");
 				break;
 			case KeyEvent.VK_S:
+				sprint();
+				break;
+			case KeyEvent.VK_SPACE:
+				shoot();
+				break;
+			case KeyEvent.VK_F:
+				stopHeal();
+				blink();
+				break;
+			case KeyEvent.VK_E:
+				heal();
+				break;
+			}
+		}
+		
+		@Override
+		public void keyReleased(KeyEvent e) {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_A:
 				stopMoveButFall();
+				break;
+			case KeyEvent.VK_D:
+				stopMoveButFall();
+				break;
+			case KeyEvent.VK_W:
+				jump();
+				playSound("jump.wav");
 				break;
 			case KeyEvent.VK_SPACE:
 				sprint();
@@ -37,7 +66,7 @@ public class Player extends FallingImage implements name.panitz.game.Player{
 				blink();
 				break;
 			case KeyEvent.VK_E:
-				heal();
+				stopHeal();
 				break;
 			}
 		}
@@ -82,8 +111,18 @@ public class Player extends FallingImage implements name.panitz.game.Player{
 		}
 	}
 	
+	private void stopHeal(){
+		if(isHealing){
+			isHealing = false;
+		}
+	}
+	
 	@Override
 	public KeyListener getKeyListener() {
 		return keyListener;
+	}
+	
+	public boolean isHealing(){
+		return isHealing;
 	}
 }

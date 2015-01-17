@@ -1,4 +1,4 @@
-package name.panitz.game;
+package framework;
 
 import javax.swing.JComponent;
 
@@ -43,7 +43,7 @@ public abstract class GeometricObject extends JComponent implements MoveAndPaint
 
 	public boolean isStandingOnTopOf(GeometricObject that) {
 		return !(isLeftOf(that) || isRightOf(that)) && isAbove(that)
-				&& corner.y + height + 2 > that.getCorner().y;
+				&& corner.y + height + 5 > that.getCorner().y;
 	}
 
 	public Vertex getCorner() {

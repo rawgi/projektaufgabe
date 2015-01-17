@@ -1,7 +1,7 @@
-package mattes.game;
+package game;
 
-import name.panitz.game.FallingImage;
-import name.panitz.game.Vertex;
+import framework.FallingImage;
+import framework.Vertex;
 
 public class Enemy extends FallingImage{
 
