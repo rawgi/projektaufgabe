@@ -20,30 +20,39 @@ public abstract class GeometricObject extends JComponent implements MoveAndPaint
 		return !(isAbove(that) || isUnderneath(that) || isLeftOf(that) || isRightOf(that));
 	}
 	
-	boolean isAbove(GeometricObject that) {
+	public boolean isAbove(GeometricObject that) {
 		return corner.y + height <= that.getCorner().y;
 	}
 
-	boolean isUnderneath(GeometricObject that) {
+	public boolean isUnderneath(GeometricObject that) {
 		return that.isAbove(this);
 	}
 
-	boolean isLeftOf(GeometricObject that) {
+	public boolean isLeftOf(GeometricObject that) {
 		return corner.x + width <= that.getCorner().x;
 	}
 
-	boolean isRightOf(GeometricObject that) {
+	public boolean isRightOf(GeometricObject that) {
 		return that.isLeftOf(this);
 	}
 	
-	@Override
-	public void move() {
-		corner.move(movement);
+	//hat mich das "that"-Object von Osten, oder Westen berührt?
+	public boolean isGettingTouchedEastBy(GeometricObject that){
+		return touches(that) && corner.x < that.getCorner().x;
 	}
-
+	
+	public boolean isGettingTouchedWestBy(GeometricObject that){
+		return that.isGettingTouchedEastBy(this);
+	}
+	
 	public boolean isStandingOnTopOf(GeometricObject that) {
 		return !(isLeftOf(that) || isRightOf(that)) && isAbove(that)
 				&& corner.y + height + 5 > that.getCorner().y;
+	}
+
+	@Override
+	public void move() {
+		corner.move(movement);
 	}
 
 	public Vertex getCorner() {

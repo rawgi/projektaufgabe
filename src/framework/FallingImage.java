@@ -18,7 +18,7 @@ public class FallingImage extends ImageObject {
 	static final double G = 9.81;
 
 	public boolean isJumping = false;
-
+	
 	Image img_left;
 	Image img_right;
 	Image img_jumpLeft;
@@ -80,13 +80,23 @@ public class FallingImage extends ImageObject {
 	}
 
 	public void shoot(){
-		int x;
-		if(img.equals(img_right) || img.equals(img_jumpRight) || img.equals(img_fallRight) || img.equals(img_shootRight)){
+		int x = 0;
+		if(movement.x > 0){
 			x=6;
 			img = img_shootRight;
-		}else{
+		}
+		if(movement.x < 0){
 			x=-6;
 			img = img_shootLeft;
+		}
+		if(movement.x == 0){
+			if(img.equals(img_right) || img.equals(img_jumpRight) || img.equals(img_fallRight)){
+				x=6;
+				img = img_shootRight;
+			} else {
+				x=-6;
+				img = img_shootLeft;
+			}
 		}
 		projectiles.add(new Projectile(new Vertex(corner.x+Game.gameSizeScale+1,corner.y+Game.gameSizeScale/2), new Vertex(x,0)));
 	}
@@ -156,22 +166,14 @@ public class FallingImage extends ImageObject {
 		}
 	}
 	
-	//hat mich das "that"-Object von Osten, oder Westen berührt?
-	public boolean isGettingTouchedEastBy(GeometricObject that){
-		if(touches(that) && corner.x < that.getCorner().x) return true;
-		return false;
-	}
-	
-	public boolean isGettingTouchedWestBy(GeometricObject that){
-		if(touches(that) && corner.x < that.getCorner().x+that.width) return true;
-		return false;
+	public boolean isInRangeOf(FallingImage that){
+		return Math.abs(corner.x-that.corner.x) < 250;
 	}
 	
 	public void invertMovementByTouchedSide(GeometricObject that){
 		if(isGettingTouchedEastBy(that)){
 			left();
-		}
-		if(isGettingTouchedWestBy(that)){
+		} else {
 			right();
 		}
 	}

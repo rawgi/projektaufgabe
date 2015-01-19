@@ -83,8 +83,13 @@ public class Game implements GameFramework{
 		for(Projectile p: player.getProjectiles()){
 			p.move();
 		}
+		
 		for(Enemy enemy: enemies){
 			enemy.move();
+			for(Projectile p: enemy.getProjectiles()){
+				p.move();
+			}
+
 			for(Projectile p: enemy.getProjectiles()){
 				p.move();
 			}
@@ -94,7 +99,7 @@ public class Game implements GameFramework{
 	@Override
 	public void checks() {
 		checkWallCollisions();
-		checkPlayerEnemyCollisions();
+		checkPlayerEnemyInteractions();
 		checkForGround();
 		checkProjectiles();
 		if(player.isHealing()){
@@ -109,7 +114,7 @@ public class Game implements GameFramework{
 		//Projektile des Spielers durchlaufen
 		for(Projectile p: player.getProjectiles()){
 			for(Wall wall: walls){
-				if(p.touches(wall)){
+				if(p.touches(wall) || p.maxRange()){
 					projectilesToRemove.add(p);
 				}
 			}
@@ -128,7 +133,7 @@ public class Game implements GameFramework{
 		for(Enemy enemy: enemies){
 			for(Projectile p: enemy.getProjectiles()){
 				for(Wall wall: walls){
-					if(p.touches(wall)){
+					if(p.touches(wall) || p.maxRange()){
 						projectilesToRemove.add(p);
 					}
 				}
@@ -173,7 +178,7 @@ public class Game implements GameFramework{
 		}
 	}
 	
-	private void checkPlayerEnemyCollisions() {
+	private void checkPlayerEnemyInteractions() {
 		Enemy enemyToDelete = null;
 		
 		for(Enemy enemy: enemies){
@@ -195,6 +200,8 @@ public class Game implements GameFramework{
 						enemyCheck.turn();
 					}
 			}
+			
+			enemy.shootAt(player);
 		}
 		
 		if(enemyToDelete != null){
@@ -206,7 +213,6 @@ public class Game implements GameFramework{
 	private void checkWallCollisions() {
 		for(Wall wall: walls){
 			if(player.touches(wall) && !player.isStandingOnTopOf(wall)){
-				System.out.println("stop, weil wand");
 					player.stopMoveButFall();
 			}
 			

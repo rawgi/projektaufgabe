@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 
@@ -13,13 +14,13 @@ public class Credits extends JPanel{
 	JButton exit = new JButton("exit");
 	public Credits(){
 		
-		setLayout(new GridLayout(2,1));
-		GridBagConstraints gbc = new GridBagConstraints();
+		setLayout(new BorderLayout());
+		
 		content.setText("<html><body style='text-align: center'>Created by: <br /> <div style='color: red'>Daniel Mattes</div> <br /><br /> Framework:<br />Prof. Sven Eric Panitz</body></html>");
-		add(content,gbc);
+		add(content, BorderLayout.CENTER);
 		exit.addActionListener(e -> {
 			((GameFrame)SwingUtilities.windowForComponent(this)).setContent(new Menu());
 		});
-		add(exit,gbc);
+		add(exit, BorderLayout.SOUTH);
 	}
 }
