@@ -4,8 +4,8 @@ import javax.swing.JComponent;
 
 public abstract class GeometricObject extends JComponent implements MoveAndPaintable {
 	public Vertex corner;
-	double width;
-	double height;
+	protected double width;
+	protected double height;
 	public Vertex movement;
 
 	public GeometricObject(Vertex corner, double width, double height, Vertex movement) {
@@ -53,6 +53,10 @@ public abstract class GeometricObject extends JComponent implements MoveAndPaint
 	@Override
 	public void move() {
 		corner.move(movement);
+	}
+	
+	public void moveTo(Vertex corner){
+		this.corner = corner;
 	}
 
 	public Vertex getCorner() {

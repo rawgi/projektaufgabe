@@ -7,4 +7,6 @@ public interface Player {
 	KeyListener getKeyListener();
 
 	Vertex getCorner();
+	
+	boolean isHealing();
 }

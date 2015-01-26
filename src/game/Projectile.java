@@ -8,7 +8,7 @@ public class Projectile extends ImageObject{
 	private double startVertex;
 	
 	public Projectile(Vertex corner, Vertex movement) {
-		super("bullet.gif", corner, movement);
+		super("bullet.png", corner, movement);
 		startVertex = corner.x;
 	}
 

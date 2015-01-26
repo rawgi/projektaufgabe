@@ -6,6 +6,7 @@ import game.Settings;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -29,6 +30,7 @@ public class GameScreen extends JPanel {
 	});
 	
 	private int spawnCount = 0;
+	private int delay = 0;
 	
 	public GameScreen(GameFramework game) {
 		this.game = game;
@@ -37,6 +39,15 @@ public class GameScreen extends JPanel {
 	
 	private void initAndStart() {
 		addKeyListener(game.getPlayer().getKeyListener());
+		switch(Settings.difficulty){
+		case "easy":
+			delay = 1300;
+			break;
+		case "hard":
+			delay = 700;
+			break;
+		default: delay = 1000;
+		}
 		timer.start();
 	}
 
@@ -49,17 +60,6 @@ public class GameScreen extends JPanel {
 	}
 	
 	private void checkForNewSpawn(){
-		int delay = 0;
-		switch(Settings.difficulty){
-		case "easy":
-			delay = 1300;
-			break;
-		case "hard":
-			delay = 700;
-			break;
-		default: delay = 1000;
-		}
-		
 		if(spawnCount == delay){
 			game.spawnEnemy();
 			spawnCount = 0;

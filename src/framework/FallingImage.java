@@ -81,34 +81,32 @@ public class FallingImage extends ImageObject {
 
 	public void shoot(){
 		int x = 0;
-		if(movement.x > 0){
+		if(lookingToTheRight()){
 			x=6;
 			img = img_shootRight;
-		}
-		if(movement.x < 0){
+		} else {
 			x=-6;
 			img = img_shootLeft;
 		}
-		if(movement.x == 0){
-			if(img.equals(img_right) || img.equals(img_jumpRight) || img.equals(img_fallRight)){
-				x=6;
-				img = img_shootRight;
-			} else {
-				x=-6;
-				img = img_shootLeft;
-			}
-		}
 		projectiles.add(new Projectile(new Vertex(corner.x+Game.gameSizeScale+1,corner.y+Game.gameSizeScale/2), new Vertex(x,0)));
+	}
+	
+	public boolean lookingToTheRight(){
+		return img.equals(img_right) || img.equals(img_jumpRight) || img.equals(img_fallRight) || img.equals(img_shootRight);
+	}
+	
+	public boolean lookingToTheLeft(){
+		return !lookingToTheRight();
 	}
 	
 	public void startJump(double v0) {
 		isJumping = true;
 		this.v0 = v0;
 		t = 0;
-		if(img == img_left){
-			img = img_jumpLeft;
-		} else {
+		if(lookingToTheRight()){
 			img = img_jumpRight;
+		} else {
+			img = img_jumpLeft;
 		}
 	}
 

@@ -62,7 +62,6 @@ public class Settings extends JPanel{
 	public static void loadSettings(){
 		String[] lines = FileUtil.readTextLines("options/settings");
 		
-		//keine foreach, da die Einstellungen anhand der Zeilennummern rausgesucht werden
 		for(String line: lines){
 			switch(line.substring(0, 5)){
 			case "level":
@@ -78,6 +77,7 @@ public class Settings extends JPanel{
 	private void saveSettings(){
 		String[] lines = FileUtil.readTextLines("options/settings");
 		
+		/* TODO settings in feste Zeilen speichern, um versehentlich geänderte settingsdatei wieder zu korrigieren*/
 		for(int x = 0; x < lines.length; x++){
 			String line = lines[x];
 			switch(line.substring(0, 5)){

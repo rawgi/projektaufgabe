@@ -47,7 +47,7 @@ public class Lifebar implements Paintable{
 
 	public void create(){
 		for(int i = 0; i<lifes; i++){
-			lifeList.add(new Life(new Vertex(i*Game.gameSizeScale,corner.y)));
+			lifeList.add(new Life(new Vertex(i*Game.gameSizeScale+corner.x,corner.y)));
 		}
 	}
 	

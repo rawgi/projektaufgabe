@@ -12,10 +12,12 @@ import util.FileUtil;
 public class Game implements GameFramework{
 
 	private Player player;
+	private int points = 0;
 	private List<Wall> walls = new ArrayList<Wall>();
 	private List<Enemy> enemies = new ArrayList<Enemy>();
 	private Lifebar lifeBar;
 	private List<Vertex> spawns = new ArrayList<Vertex>();
+	private List<Coin> coins = new ArrayList<Coin>();
 	
 	private int width;
 	private int height;
@@ -56,7 +58,7 @@ public class Game implements GameFramework{
 		}
 		height = curLine*gameSizeScale+gameSizeScale;
 		
-		lifeBar = new Lifebar(new Vertex(0,curLine*gameSizeScale),5);
+		lifeBar = new Lifebar(new Vertex(50,curLine*gameSizeScale),5);
 	}
 	
 	@Override
@@ -74,7 +76,12 @@ public class Game implements GameFramework{
 				p.paintTo(g);
 			}
 		}
+		for(Coin coin: coins){
+			coin.paintTo(g);
+		}
 		lifeBar.paintTo(g);
+		//soll auf der gleichen höhe, wie die lifeBar sein
+		g.drawString(points+"", 0, (int)lifeBar.corner.y+gameSizeScale);
 	}
 
 	@Override
@@ -105,6 +112,7 @@ public class Game implements GameFramework{
 		if(player.isHealing()){
 			lifeBar.healOne();
 		}
+		checkCoinsCollected();
 	}
 
 	private void checkProjectiles() {
@@ -147,41 +155,59 @@ public class Game implements GameFramework{
 			}
 		}
 		for(Enemy enemy: enemiesHit){
+			coins.add(new Coin(enemy.getCorner()));
 			enemies.remove(enemy);
 		}
 	}
 
-	//prüft, ob eine Figur von einer Plattform fällt.
+
 	private void checkForGround(){
 		boolean playerMustFall = true;
 		List<Enemy> enemysToTurn = new ArrayList<Enemy>();
 
-		for(Enemy enemy: enemies){
-			boolean enemyMustFall = true;
-			for(Wall wall: walls){
-				if(enemy.isStandingOnTopOf(wall)) enemyMustFall = false;
-				
-				if(player.isStandingOnTopOf(wall)) playerMustFall = false;
+		//if-bedingung, wegen bug, wenn kein gegner mehr uebrig ist, aber der punkt noch eingesammelt werden muss
+		if(!enemies.isEmpty()){	
+			for(Enemy enemy: enemies){
+				boolean enemyMustFall = true;
+				//prüft, ob eine Figur von einer Plattform fällt.
+				for(Wall wall: walls){
+					if(enemy.isStandingOnTopOf(wall)) enemyMustFall = false;
+					
+					if(player.isStandingOnTopOf(wall)) playerMustFall = false;
+				}
+				if(enemyMustFall) enemysToTurn.add(enemy);
 			}
-			if(enemyMustFall) enemysToTurn.add(enemy);
+		}else{
+			for(Wall wall: walls){	
+				if(player.isStandingOnTopOf(wall)){
+					playerMustFall = false;
+					break;
+				}
+			}
 		}
+		
+		//lässt den spieler fallen
 		if(playerMustFall && !player.isJumping){
 			player.startJump(1);
 		}
 		
-		if(enemysToTurn.size() > 0){
-			for(Enemy enemy: enemysToTurn){
-				if(!enemy.isJumping){
-						enemy.turn();
-				}
+		//lässt die entsprechenden Gegner umdrehen
+		for(Enemy enemy: enemysToTurn){
+			if(!enemy.isJumping){
+					enemy.turn();
 			}
 		}
 	}
 	
 	private void checkPlayerEnemyInteractions() {
+		
+		//keine Liste, da der Spieler nur mit einem Gegner interagieren können soll.
+		//steht er z.B. auf 2 Gegnern, so kann er immer nur einen treffen.
 		Enemy enemyToDelete = null;
 		
 		for(Enemy enemy: enemies){
+			
+			// berührt der Spieler den Gegner?
 			if(player.isStandingOnTopOf(enemy)){
 				enemyToDelete = enemy;
 				player.stopFallButMove();
@@ -194,6 +220,7 @@ public class Game implements GameFramework{
 				}
 			}
 			
+			//berührt irgendein anderer Gegner diesen Gegner
 			for(Enemy enemyCheck: enemies){
 					if(enemyCheck != enemy && enemyCheck.touches(enemy)){
 						enemy.turn();
@@ -205,11 +232,26 @@ public class Game implements GameFramework{
 		}
 		
 		if(enemyToDelete != null){
-			spawns.add(enemyToDelete.corner);
+			coins.add(new Coin(enemyToDelete.getCorner()));
+			spawns.add(enemyToDelete.getCorner());
 			enemies.remove(enemyToDelete);
 		}
 	}
 
+	private void checkCoinsCollected(){
+		List<Coin> collectedCoins = new ArrayList<Coin>();
+		for(Coin coin: coins){
+			if(player.touches(coin)){
+				collectedCoins.add(coin);
+				points++;
+			}
+		}
+		//meistens eh nur 1, aber evtl liegen mal 2 nebereinander
+		for(Coin coin: collectedCoins){
+			coins.remove(coin);
+		}
+	}
+	
 	private void checkWallCollisions() {
 		for(Wall wall: walls){
 			if(player.touches(wall) && !player.isStandingOnTopOf(wall)){
@@ -232,6 +274,8 @@ public class Game implements GameFramework{
 	}
 	
 	public void spawnEnemy(){
+		//sollten zu viele Gegner auf dem Feld sein, verliert der Spieler ein Leben
+		//für jeden zusätzlichen Spawnenden Gegner
 		if(spawns.size() > 0){
 			enemies.add(new Enemy(spawns.get((int)(Math.random()*spawns.size()))));
 		} else {
@@ -250,7 +294,7 @@ public class Game implements GameFramework{
 
 	@Override
 	public boolean won() {
-		return enemies.size() == 0 ? true : false;
+		return enemies.size() == 0 && coins.size() == 0 ? true : false;
 	}
 	
 	@Override

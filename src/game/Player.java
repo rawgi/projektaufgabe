@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import javax.swing.Timer;
 
 import framework.FallingImage;
+import framework.GeometricObject;
 import framework.Vertex;
 
 public class Player extends FallingImage implements framework.Player{
@@ -34,11 +35,8 @@ public class Player extends FallingImage implements framework.Player{
 				sprint();
 				break;
 			case KeyEvent.VK_SPACE:
-				shoot();
-				break;
-			case KeyEvent.VK_F:
 				stopHeal();
-				blink();
+				shoot();
 				break;
 			case KeyEvent.VK_E:
 				heal();
@@ -61,9 +59,6 @@ public class Player extends FallingImage implements framework.Player{
 				break;
 			case KeyEvent.VK_SPACE:
 				sprint();
-				break;
-			case KeyEvent.VK_F:
-				blink();
 				break;
 			case KeyEvent.VK_E:
 				stopHeal();
@@ -98,10 +93,6 @@ public class Player extends FallingImage implements framework.Player{
 		}
 		isSprint = false;
 		sprintTimer.stop();
-	}
-	
-	private void blink(){
-		
 	}
 	
 	private void heal(){
