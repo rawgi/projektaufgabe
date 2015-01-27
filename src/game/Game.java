@@ -22,13 +22,26 @@ public class Game implements GameFramework{
 	private int width;
 	private int height;
 	
+	private int spawnCount = 0;
+	private int delay = 0;
+	
 	public static int gameSizeScale = 40;
 	
 	public Game(){
 		buildLevel(Settings.level);
+		
+		switch(Settings.difficulty){
+		case "easy":
+			delay = 1300;
+			break;
+		case "hard":
+			delay = 700;
+			break;
+		default: delay = 1000;
+		}
 	}
 	
-	void buildLevel(String level) {
+	private void buildLevel(String level) {
 
 		String[] lines = FileUtil.readTextLines("maps/"+level);
 		int curLine = 0;
@@ -109,10 +122,11 @@ public class Game implements GameFramework{
 		checkPlayerEnemyInteractions();
 		checkForGround();
 		checkProjectiles();
+		checkCoinsCollected();
+		checkForNewSpawn();
 		if(player.isHealing()){
 			lifeBar.healOne();
 		}
-		checkCoinsCollected();
 	}
 
 	private void checkProjectiles() {
@@ -159,7 +173,6 @@ public class Game implements GameFramework{
 			enemies.remove(enemy);
 		}
 	}
-
 
 	private void checkForGround(){
 		boolean playerMustFall = true;
@@ -270,6 +283,15 @@ public class Game implements GameFramework{
 					enemy.stopFallButMove();
 				}
 			}
+		}
+	}
+
+	private void checkForNewSpawn(){
+		if(spawnCount == delay){
+			spawnEnemy();
+			spawnCount = 0;
+		} else {
+			spawnCount++;
 		}
 	}
 	

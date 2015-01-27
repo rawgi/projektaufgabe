@@ -1,8 +1,6 @@
 package game;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;

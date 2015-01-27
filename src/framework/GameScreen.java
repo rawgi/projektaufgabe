@@ -1,13 +1,13 @@
 package framework;
 
+import game.EndScreen;
 import game.GameFrame;
-import game.Menu;
-import game.Settings;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
+import java.net.URL;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -18,19 +18,17 @@ public class GameScreen extends JPanel {
 	GameFramework game;
 	GameFrame gFrame;
 	
+	ImageIcon backgroundImg;
+	
 	Timer timer = new Timer(1000 / 100, (ev) -> {
 		game.step();
 		game.checks();
 		checkForEndOfGame();
-		checkForNewSpawn();
 		repaint();
 		java.awt.Toolkit.getDefaultToolkit().sync();
 
 		requestFocusInWindow();
 	});
-	
-	private int spawnCount = 0;
-	private int delay = 0;
 	
 	public GameScreen(GameFramework game) {
 		this.game = game;
@@ -39,32 +37,23 @@ public class GameScreen extends JPanel {
 	
 	private void initAndStart() {
 		addKeyListener(game.getPlayer().getKeyListener());
-		switch(Settings.difficulty){
-		case "easy":
-			delay = 1300;
-			break;
-		case "hard":
-			delay = 700;
-			break;
-		default: delay = 1000;
-		}
+		
+		//background image laden
+		URL resource = this.getClass().getClassLoader().getResource("images/background.jpg");
+		backgroundImg = new ImageIcon(resource);
+		
 		timer.start();
 	}
 
 	private void checkForEndOfGame() {
 		if (game.finished()) {
 			timer.stop();
-			gFrame = (GameFrame) SwingUtilities.getWindowAncestor(this);
-			gFrame.setContent(new Menu());
-		}
-	}
-	
-	private void checkForNewSpawn(){
-		if(spawnCount == delay){
-			game.spawnEnemy();
-			spawnCount = 0;
-		} else {
-			spawnCount++;
+			gFrame = (GameFrame)SwingUtilities.getWindowAncestor(this);
+			if(game.won()){
+				gFrame.setContent(new EndScreen(true));
+			}else{
+				gFrame.setContent(new EndScreen(false));
+			}
 		}
 	}
 
@@ -76,6 +65,7 @@ public class GameScreen extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.drawImage(backgroundImg.getImage(), 0, 0, 800, 600, null);
 		game.paintTo(g);
 	}
 }

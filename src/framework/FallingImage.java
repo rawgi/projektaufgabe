@@ -58,8 +58,18 @@ public class FallingImage extends ImageObject {
 		if(resource != null){
 			ImageIcon icon = new ImageIcon(resource);
 			return icon.getImage();
-		} else {
-			return img;
+		}else{
+			//soll versuchen, zumindest die blickrichtung bei zu behalten, falls das gesuchte img nicht vorhanden ist
+			try{
+				String s = playerAction.substring(playerAction.length()-4,playerAction.length());
+				if(s.equals("Left")){
+					return img_left;
+				}else{
+					return img;
+				}
+			}catch(Exception e){
+				return img;
+			}
 		}
 	}
 	

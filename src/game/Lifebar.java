@@ -1,6 +1,5 @@
 package game;
 
-
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;

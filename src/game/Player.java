@@ -7,7 +7,6 @@ import java.awt.event.KeyListener;
 import javax.swing.Timer;
 
 import framework.FallingImage;
-import framework.GeometricObject;
 import framework.Vertex;
 
 public class Player extends FallingImage implements framework.Player{
