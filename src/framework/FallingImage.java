@@ -92,10 +92,10 @@ public class FallingImage extends ImageObject {
 	public void shoot(){
 		int x = 0;
 		if(lookingToTheRight()){
-			x=6;
+			x = 6;
 			img = img_shootRight;
 		} else {
-			x=-6;
+			x = -6;
 			img = img_shootLeft;
 		}
 		projectiles.add(new Projectile(new Vertex(corner.x+Game.gameSizeScale+1,corner.y+Game.gameSizeScale/2), new Vertex(x,0)));

@@ -33,7 +33,7 @@ public class FileUtil {
 	}
 	
 	public static void writeFile(String fileName, String[] content){
-		try(FileWriter fw = new FileWriter(new File("./options/settings"))){
+		try(FileWriter fw = new FileWriter(new File(fileName))){
 			for(String curLine: content){
 				fw.write(curLine+"\n");
 			}
