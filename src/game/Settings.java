@@ -43,7 +43,7 @@ public class Settings extends JPanel{
 		
 		add(levelL, gbc);
 		try {
-			for(String map: FileUtil.getFileListAsStringArray("./maps")){
+			for(String map: FileUtil.getFileListAsStringArray("maps")){
 				levelCB.addItem(map);
 			}
 		} catch (IOException e1) {
